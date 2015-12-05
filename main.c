@@ -20,14 +20,14 @@ int main(int argc, char *argv[])
     //char nome_arq[]=argv[1];
     FILE * entrada;
 
-    char *palavra, linha[1000]; // linhas a serem lidas do arquivo
+    char *palavra1, linha[1000]; // linhas a serem lidas do arquivo
+	char *palavra2, linha[1000]; // linhas a serem lidas do arquivo
     char separador[]= {" 0123456789,.&*%\?!;/-'@\"$#=><()][}{:\n\t"};
 
 	//memes
 
     entrada = fopen (argv[1], "r"); // abre o arquivo para leitura
-    if (entrada == NULL) //se n?o conseguiu abrir o arquivo
-    {
+    if (entrada == NULL){ //se n?o conseguiu abrir o arquivo
         printf ("Erro ao abrir o arquivo %s",argv[1]);
         return 1;
     }
@@ -36,14 +36,20 @@ int main(int argc, char *argv[])
         start=clock(); //inicia a contagem do tempo;
 
         //percorre todo o arquivo lendo linha por linha
-        while (fgets(linha,1000,entrada))
-        {
-            palavra = strtok (linha, separador); //considera qquer caractere n?o alfab?tico como separador
-            while (palavra != NULL)
-            {
+        while (fgets(linha,1000,entrada)){
+            palavra1 = strtok (linha, separador); //considera qquer caractere n?o alfab?tico como separador
+			if(palavra1[0] < 97){
+				lowerString(palavra);
+			}
+
+            do{
                 arvore = InsereAVL(arvore, palavra, &altura);
+				palavra2 = strtok (NULL, separador); //considera qquer caractere n?o alfab?tico como separador
+				//colocar q a palavra 2 ta do lado da 1
+				arvore = InsereAVL(arvore, palavra, &altura);
+
                 palavra = strtok (NULL, separador); // printf(" %s", gordaco)
-            }
+            }while (palavra1 != NULL && palavra2 != NULL);
 
         }
         end=clock(); //l? o tempo final
