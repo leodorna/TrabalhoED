@@ -1,10 +1,21 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "AVL.h"
 
-pNodoA* InsereAVL (pNodoA *a, TipoInfo* x, int *ok){
-/* Insere nodo em uma árvore AVL, onde A representa a raiz da árvore,
-x, a chave a ser inserida e h a altura da árvore */
+pNodoA* InsereAVL (pNodoA *a, TipoInfo* x, int *ok)
+{
+    /* Insere nodo em uma árvore AVL, onde A representa a raiz da árvore,
+    x, a chave a ser inserida e h a altura da árvore */
+
+    /*
+    if(x[0] < 97){
+        lowerString(x);
+    }
+    */
+
+    puts(x);
+
     if (a == NULL){
 
 		a = (pNodoA*) malloc(sizeof(pNodoA));
