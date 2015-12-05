@@ -7,6 +7,19 @@
 
 /* Exemplo de abertura e tokeniza??o de um arquivo texto*/
 
+void lowerString(char *palavra)
+{
+	int i = 0;
+
+	while(palavra[i] != '\0')
+	{
+		palavra[i] = tolower(palavra[i]);
+		printf("a");
+		i++;
+	}
+
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -21,7 +34,7 @@ int main(int argc, char *argv[])
     FILE * entrada;
 
     char *palavra1, linha[1000]; // linhas a serem lidas do arquivo
-	char *palavra2, linha[1000]; // linhas a serem lidas do arquivo
+	char *palavra2; // linhas a serem lidas do arquivo
     char separador[]= {" 0123456789,.&*%\?!;/-'@\"$#=><()][}{:\n\t"};
 
 	//memes
@@ -38,19 +51,17 @@ int main(int argc, char *argv[])
         //percorre todo o arquivo lendo linha por linha
         while (fgets(linha,1000,entrada)){
             palavra1 = strtok (linha, separador); //considera qquer caractere n?o alfab?tico como separador
-			if(palavra1[0] < 97){
-				lowerString(palavra);
-			}
 
             do{
-				palavra2 = strtok (NULL, separador); 			//considera qquer caractere nao alfabetico como separador
-                arvore = InsereAVL(arvore, palavra, &altura); 	//<-- colocar q a palavra 2 ta do lado da 1
+				//palavra2 = strtok (NULL, separador); 			//considera qquer caractere nao alfabetico como separador
+                arvore = InsereAVL(arvore, palavra1, &altura); 	//<-- colocar q a palavra 2 ta do lado da 1
 
-				arvore = InsereAVL(arvore, palavra, &altura);
+				//arvore = InsereAVL(arvore, palavra, &altura);
 
-                palavra = strtok (NULL, separador); // printf(" %s", gordaco)
-            }while (palavra1 != NULL && palavra2 != NULL);
+                palavra1 = strtok (NULL, separador); // printf(" %s", gordaco)
+            }while (palavra1 != NULL /*&& palavra2 != NULL*/);
 
+			fflush(entrada);
         }
         end=clock(); //le o tempo final
         elapsed = 1000 * (end - start) / (CLOCKS_PER_SEC); //calcula o tempo decorrido em milissegundos
