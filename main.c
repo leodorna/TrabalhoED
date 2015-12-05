@@ -23,6 +23,8 @@ int main(int argc, char *argv[])
     char *palavra, linha[1000]; // linhas a serem lidas do arquivo
     char separador[]= {" 0123456789,.&*%\?!;/-'@\"$#=><()][}{:\n\t"};
 
+	//memes
+
     entrada = fopen (argv[1], "r"); // abre o arquivo para leitura
     if (entrada == NULL) //se n?o conseguiu abrir o arquivo
     {
@@ -52,4 +54,3 @@ int main(int argc, char *argv[])
     imprimeComDistancia(arvore, 0);
     return 0;
 }
-
