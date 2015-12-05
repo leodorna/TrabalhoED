@@ -43,16 +43,16 @@ int main(int argc, char *argv[])
 			}
 
             do{
-                arvore = InsereAVL(arvore, palavra, &altura);
-				palavra2 = strtok (NULL, separador); //considera qquer caractere n?o alfab?tico como separador
-				//colocar q a palavra 2 ta do lado da 1
+				palavra2 = strtok (NULL, separador); 			//considera qquer caractere nao alfabetico como separador
+                arvore = InsereAVL(arvore, palavra, &altura); 	//<-- colocar q a palavra 2 ta do lado da 1
+
 				arvore = InsereAVL(arvore, palavra, &altura);
 
                 palavra = strtok (NULL, separador); // printf(" %s", gordaco)
             }while (palavra1 != NULL && palavra2 != NULL);
 
         }
-        end=clock(); //l? o tempo final
+        end=clock(); //le o tempo final
         elapsed = 1000 * (end - start) / (CLOCKS_PER_SEC); //calcula o tempo decorrido em milissegundos
         printf("\nO tempo gasto na tokenizacao do arquivo foi de %ld ms\n",elapsed);
     }
