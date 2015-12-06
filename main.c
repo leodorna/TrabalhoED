@@ -5,8 +5,6 @@
 #include <time.h>
 #include "AVL.h"
 
-/* Exemplo de abertura e tokeniza??o de um arquivo texto*/
-
 void lowerString(char *palavra)
 {
 	int i = 0;
@@ -14,7 +12,6 @@ void lowerString(char *palavra)
 	while(palavra[i] != '\0')
 	{
 		palavra[i] = tolower(palavra[i]);
-		printf("a");
 		i++;
 	}
 
@@ -37,32 +34,40 @@ int main(int argc, char *argv[])
 	char *palavra2; // linhas a serem lidas do arquivo
     char separador[]= {" 0123456789,.&*%\?!;/-'@\"$#=><()][}{:\n\t"};
 
-	//memes
-
-    entrada = fopen (argv[1], "r"); // abre o arquivo para leitura
-    if (entrada == NULL){ //se n?o conseguiu abrir o arquivo
+    entrada = fopen (argv[1], "r");
+    if (entrada == NULL){
         printf ("Erro ao abrir o arquivo %s",argv[1]);
         return 1;
     }
-    else // arquivo OK
-    {
+    else{
         start=clock(); //inicia a contagem do tempo;
 
-        //percorre todo o arquivo lendo linha por linha
-        while (fgets(linha,1000,entrada)){
-            palavra1 = strtok (linha, separador); //considera qquer caractere n?o alfab?tico como separador
+		fgets(linha,1000,entrada);
+		//pega primeira linha, eh um caso especial
+		palavra = NULL;
+		// a primeira palavra vai ser representada como NULL, pois a funcao eh a msm pra todas insercoes
+		palavra2 = strtok(linha, separador);
+		//e a alocacao de memoria para FREQUENCIA eh feita pela palavra 2
+		arvore = InsereAVL(arvore, palavra, palavra2, aux, &altura);
+		//nao vai criar nodo algum, soh vai alocar um espaco para frequencia da primeira palavra
+		strcpy(palavra, palavra2);
 
-            do{
-				//palavra2 = strtok (NULL, separador); 			//considera qquer caractere nao alfabetico como separador
-                arvore = InsereAVL(arvore, palavra1, &altura); 	//<-- colocar q a palavra 2 ta do lado da 1
+        while(palavra2!=NULL){ //essa condicao soh sera verdade se chegou no final do arquivo(eu espero) TEM QUE VER SE EH MESMO ISSO
+			if((palavra2=strtok(NULL,separador))==NULL){
+				//palavra2 vai receber a palavra da mesma linha se nao chegou ao final da mesma
+            	if(fgets(linha,1000,entrada)){
+					//mas se chegou ao final da linha, pega a proxima linha e salve salve gurizada!!!
+            		palavra2 = strtok(linha,separador);
+					//se a LINHA nao era NULA palavra2 vai receber a palavra, else a palavra2 continuara NULA
+					fflush(entrada);
+				}
+			}
 
-				//arvore = InsereAVL(arvore, palavra, &altura);
+			arvore = InsereAVL(arvore, palavra, palavra2, aux, &altura);
 
-                palavra1 = strtok (NULL, separador); // printf(" %s", gordaco)
-            }while (palavra1 != NULL /*&& palavra2 != NULL*/);
-
-			fflush(entrada);
+			strcpy(palavra, palavra2);	//palavra1 = palavra2
         }
+
         end=clock(); //le o tempo final
         elapsed = 1000 * (end - start) / (CLOCKS_PER_SEC); //calcula o tempo decorrido em milissegundos
         printf("\nO tempo gasto na tokenizacao do arquivo foi de %ld ms\n",elapsed);
