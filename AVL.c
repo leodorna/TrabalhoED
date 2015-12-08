@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include "AVL.h"
 
 pNodoA* InsereAVL (pNodoA *a, TipoInfo* x, int *ok)
@@ -16,39 +13,56 @@ pNodoA* InsereAVL (pNodoA *a, TipoInfo* x, int *ok)
 
     puts(x);
 
-    if (a == NULL){
+    if(palavra !=NULL){
+		if (a == NULL){
+            if(palavra[0] < 97){
+				lowerString(palavra);
+			}
+			a = (pNodoA*) malloc(sizeof(pNodoA));
 
-		a = (pNodoA*) malloc(sizeof(pNodoA));
-		strcpy(a->info, x);
-        a->esq = NULL;
-        a->dir = NULL;
-        a->FB = 0;
-        a->freq = 1;
-        *ok = 1;
+			strcpy(a->info, palavra);
 
-    }
-    else if (strcmp(x, a->info) < 0){ //as comparações devem ser feitas utilizando STRCMP
-        a->esq = InsereAVL(a->esq,x,ok);
-        if (*ok){
-            switch (a->FB){
-                case -1: a->FB = 0; *ok = 0; break;
-                case 0: a->FB = 1; break;
-                case 1: a=Caso1(a,ok); break;
+	        a->esq = NULL;
+	        a->dir = NULL;
+	        a->FB = 0;
+	        a->adj = NULL;
+
+	        if(palavra2){
+                a->adj = insereLista(a, palavra2);
             }
-        }
-    }
-    else if(strcmp(x, a->info) > 0){
-        a->dir = InsereAVL(a->dir,x,ok);
-        if (*ok){
-            switch (a->FB){
-                case 1: a->FB = 0; *ok = 0; break;
-                case 0: a->FB = -1; break;
-                case -1: a = Caso2(a,ok); break;
+            a->freq = 1;
+
+	        *ok = 1;
+	    }
+	    else if (strcmp(palavra, a->info) < 0){ //as comparações devem ser feitas utilizando STRCMP
+	        a->esq = InsereAVL(a->esq,palavra,palavra2, ok);
+
+	        if (*ok){
+	            switch (a->FB){
+	                case -1: a->FB = 0; *ok = 0; break;
+	                case 0: a->FB = 1; break;
+	                case 1: a=Caso1(a,ok); *ok = 0; break;
+	            }
+	        }
+	    }
+	    else if(strcmp(palavra, a->info) > 0){
+	        a->dir = InsereAVL(a->dir,palavra,palavra2, ok);
+
+	        if (*ok){
+	            switch (a->FB){
+	                case 1: a->FB = 0; break;
+	                case 0: a->FB = -1; break;
+	                case -1: a = Caso2(a,ok); break;
+	            }
+	        }
+	    }
+	    else{
+			(a->freq)++;
+
+			if(palavra2){
+			a->adj = insereLista(a, palavra2);
             }
-        }
-    }
-    else{
-		(a->freq)++;
+		}
 	}
 
     return a;
@@ -91,28 +105,33 @@ pNodoA* Caso2 (pNodoA *a , int *ok)
 pNodoA* rotacao_direita(pNodoA* pt)
 {
     pNodoA *ptu;
+
     ptu = pt->esq;
     pt->esq = ptu->dir;
     ptu->dir = pt;
     pt->FB = 0;
     pt = ptu;
+
     return pt;
 }
 
 pNodoA* rotacao_esquerda(pNodoA *pt)
 {
     pNodoA *ptu;
+
     ptu = pt->dir;
     pt->dir = ptu->esq;
     ptu->esq = pt;
     pt->FB = 0;
     pt = ptu;
+
     return pt;
 }
 
 pNodoA* rotacao_dupla_esquerda (pNodoA *pt)
 {
     pNodoA *ptu, *ptv;
+
     ptu = pt->dir;
     ptv = ptu->esq;
     ptu->esq = ptv->dir;
@@ -133,6 +152,7 @@ pNodoA* rotacao_dupla_esquerda (pNodoA *pt)
 pNodoA* rotacao_dupla_direita (pNodoA* pt)
 {
     pNodoA *ptu, *ptv;
+
     ptu = pt->esq;
     ptv = ptu->dir;
     ptu->dir = ptv->esq;
@@ -173,4 +193,55 @@ void imprimeComDistancia(pNodoA *nude, int cont)
 
     imprimeComDistancia(nude->esq, cont);
     imprimeComDistancia(nude->dir, cont);
+}
+
+int contaNodos(pNodoA *nude)
+{
+    int d, l;
+
+    if(nude==NULL) return 0;
+
+    d= contaNodos(nude->dir);
+    l= contaNodos(nude->esq);
+
+    return d+l+1;
+}
+
+float buscaFreq(pNodoA* a, TipoInfo *nome)
+{
+	puts(a->info);
+	puts(nome);
+
+	if(strcmp(a->info, nome) == 0){
+		return a->freq;
+	}
+
+	if(strcmp(a->info, nome) < 0) return buscaFreq(a->dir, nome);
+	if(strcmp(a->info, nome) > 0) return buscaFreq(a->esq, nome);
+}
+
+void calculaAdj(pNodoA* a, pNodoA* inicioA)
+{
+	Lista *paux;
+	float auxiliar;
+	if(a== NULL)
+	return;
+
+	if(a->adj==NULL){
+        puts("LISTA VAZIA\n");
+    }
+    else{
+        for(paux=a->adj; paux!=NULL; paux=paux->proximo){
+        	printf("aaaa");
+        	puts(a->info);
+            paux->freqAB = (paux->freqAB)/sqrt((a->freq) * buscaFreq(inicioA, paux->nome));
+            printf("bbbb");
+        }
+    }
+    printf("ccccc");
+
+    calculaAdj(a->dir, inicioA);
+    calculaAdj(a->esq, inicioA);
+
+	return;
 }

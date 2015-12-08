@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 typedef char TipoInfo;
 
 struct TItemA{
@@ -34,3 +32,9 @@ pNodoA* rotacao_dupla_direita (pNodoA* pt);
 void imprimeArvore(pNodoA *nude);
 
 void imprimeComDistancia(pNodoA *nude, int cont);
+
+int contaNodos(pNodoA *nude);
+
+float buscaFreq(pNodoA* a, TipoInfo *nome);
+
+void calculaAdj(pNodoA* a, pNodoA* inicioA);
